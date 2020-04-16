@@ -9,10 +9,22 @@ Fun script for plotting the internal and external dependency structure of python
 
 ## Usage
 
-- first, run the `get_repo` function, setting the first argument to the path of the repository you want to plot
-  - if using a github repo, make sure to include the username of the repo owner and set the `from_github` argument to `True`
-    - the pygithub API might get mad at you for making too many calls (you can get around that by providing authentication during the API call); unless you're going overboard you should be fine
-- then, run the `plot_dependencies` function; the first two arguments are the `graph` dictionary returned by `get_repo` and the filename for the plot image
+Plotting a local repository:
+
+```python
+graph = get_repo('path/to/repo')
+plot_dependencies(graph, 'image_of_graph.png', style = 'kamada_kawai')
+```
+
+Plotting a repository from github:
+
+```python
+graph = get_repo('mwetzel7r/python-module-grapher', from_github = True)
+plot_dependencies(graph, 'image_of_graph.png', style = 'kamada_kawai')
+```
+
+- the pygithub API might get mad at you for making too many calls (you can get around that by providing authentication during the API call)
+  - unless you're going overboard you should be fine
 
 ## Examples
 
@@ -52,3 +64,4 @@ It works best for smaller repos; it sort of gets unwieldy (but also kind of funn
 - color nodes based on whether they're internal, external, or from the python standard lib
 - plot variables/functions that are shared across scripts (im finding this to be sort of difficult)
 - finding a way to organize nodes based on whether they all fall in the same directory
+- convert to html/javascript and add to personal website 🤙
