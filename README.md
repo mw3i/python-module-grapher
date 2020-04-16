@@ -16,6 +16,10 @@ Fun script for plotting the internal and external dependency structure of python
 
 ## Examples
 
+Here's a plot of this repo:
+
+![plot of this repo](_/self.png)
+
 Here's an example of [vsoch](https://github.com/vsoch) (a very cool researcher at Standford)'s [pokemon](https://github.com/vsoch/pokemon) repo:
 
 ![pokemon plot](_/vsoch--pokemon.png)

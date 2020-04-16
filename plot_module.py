@@ -157,7 +157,6 @@ def plot_dependencies(graph, filename, style = 'shell'):
 
 if __name__ == "__main__":
     import pickle
-
     graph = get_repo('mwetzel7r/python-module-grapher', from_github = True)
 
     # ##__save graph for later use (to avoid frequent calls to the github API)
@@ -168,5 +167,5 @@ if __name__ == "__main__":
     # with open('savedgraph.pckl', 'rb') as file:
         # graph = pickle.load(file)
 
-    plot_dependencies(graph, 'test.png', style = 'kamada_kawai')
+    plot_dependencies(graph, 'results.png', style = 'kamada_kawai')
 
