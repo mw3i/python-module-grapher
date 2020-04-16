@@ -157,7 +157,7 @@ def plot_dependencies(graph, filename, style = 'shell'):
 
 if __name__ == "__main__":
     import pickle
-    graph = get_repo('mwetzel7r/python-module-grapher', from_github = True)
+    graph = get_repo('mwetzel7r/python-module-grapher', from_github = True) # <-- from_github defaults to False; i.e., it assumes you're plotting a local repo unless you tell it otherwise
 
     # ##__save graph for later use (to avoid frequent calls to the github API)
     # with open('savedgraph.pckl','wb') as file:
