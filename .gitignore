@@ -1,0 +1,5 @@
+auth.py
+__pycache__
+*.pckl
+saves/
+.DS_Store
