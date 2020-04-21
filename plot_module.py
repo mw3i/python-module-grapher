@@ -11,6 +11,7 @@ Some of this code is influenced by / shamelessly copied off of:
 '''
 import ast, sys, os, types
 import base64
+import numpy as np 
 
 def fillGraph(graph, rootDir, ignore = []):
     for item in os.listdir(rootDir):
@@ -108,9 +109,14 @@ def get_repo(rootDir, from_github = False, authentication = []):
 
 def plot_dependencies(graph, filename, style = 'shell'):
     import matplotlib.pyplot as plt 
+    from matplotlib.gridspec import GridSpec
+    import seaborn as sns
+
     import networkx as nx 
-    
-    fig = plt.figure(figsize = [20,10])
+
+    fig = plt.figure(figsize = [22,10])
+    gs = GridSpec(3,12)
+
 
     positions = {
         'random': lambda G: nx.layout.random_layout(G),
@@ -134,30 +140,53 @@ def plot_dependencies(graph, filename, style = 'shell'):
                 G.add_edge(*[node, connection['id'].split('.')[0]])
 
     pos = positions[style](G)
-    
+    ax = plt.subplot(gs[:,:-5])
     nx.draw(
         G, 
         pos, 
         with_labels = True, 
         font_weight = 'bold',
+        font_size = max(6, 17 - round(len(graph['nodes'])/20)),
         arrows = True,
         font_color = [0,0,0,.75],
         node_color = [[.75,.75,.75,1]],
-        node_size = 5000,
-        width = 3,
-        arrowsize = 20,
+        node_size = max(1500, 5000 - (len(graph['nodes'])*6)),
+        width = 1.5,
+        arrowsize = 12,
         edgecolors = [[0,0,0,.1]],
         edge_color = [[.3,.3,.3,.5]],
-        linewidths = 4,
-        # ax = ax,
+        linewidths = 2,
+        ax = ax,
     )
 
+
+    ## node distribution
+    ax = plt.subplot(gs[:2,-5:])
+    adj = np.asarray(nx.adjacency_matrix(G).todense())
+    count_sort = adj.sum(axis=0).argsort()
+    ax.imshow(
+        adj[:,np.array(count_sort)[::-1]], 
+        cmap = 'binary',
+    )
+    ax.set_title('adj matrix', fontsize = 22, fontweight = 'bold')
+    ax.set_xticks([]); ax.set_yticks([])
+
+
+    ax = plt.subplot(gs[2:4,-5:])
+    sns.distplot(
+        adj.sum(axis = 0)
+    )
+
+    ax.set_title('degree distribution', fontsize = 22, fontweight = 'bold')
+    plt.tight_layout()
     plt.savefig(filename)
+
 
 
 if __name__ == "__main__":
     import pickle
     graph = get_repo('mwetzel7r/python-module-grapher', from_github = True) # <-- from_github defaults to False; i.e., it assumes you're plotting a local repo unless you tell it otherwise
+    # graph = get_repo('numpy/numpy', from_github = True) # <-- from_github defaults to False; i.e., it assumes you're plotting a local repo unless you tell it otherwise
 
     # ##__save graph for later use (to avoid frequent calls to the github API)
     # with open('savedgraph.pckl','wb') as file:
@@ -165,7 +194,10 @@ if __name__ == "__main__":
 
     # ##__load previous graph
     # with open('savedgraph.pckl', 'rb') as file:
+    # with open('saves/numpyGraph.pckl', 'rb') as file:
         # graph = pickle.load(file)
 
+
     plot_dependencies(graph, 'results.png', style = 'kamada_kawai')
+
 
